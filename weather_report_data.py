@@ -62,11 +62,11 @@ class Alerts:
 
         res = requests.get(url).json()
         if not res['alerts']:
-            return 'No alerts.'
+            return '\nNo alerts.'
         else:
             for alert in res['alerts']:
                 alert = res['alerts'][0]['message']
-                return '{}'.format(alert)
+                return '\n{}\n'.format(alert)
 
 
 
@@ -77,7 +77,7 @@ class Hurricane:
         res = requests.get(url).json()
         hurricanes = ''
         if not res['currenthurricane']:
-            hurricanes = 'None'
+            hurricanes = '\nNone\n'
 
         else:
             for hurricane in res['currenthurricane']:
