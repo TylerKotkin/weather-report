@@ -16,7 +16,7 @@ class Current:
         temp = res['current_observation']['temp_f']
         conditions = res['current_observation']['weather']
 
-        return {'temp': temp, 'conditions': conditions}
+        return "\nCurrent Temp: {}. Current Conditions: {}\n".format(temp, conditions)
 
 
 class TenDay:
@@ -28,12 +28,11 @@ class TenDay:
 
         res = requests.get(url).json()
 
-        tenday = {}
         for n in range(20):
-            period = 'period' + str(n + 1)
-            tenday[period] = res['forecast']['txt_forecast']['forecastday'][n]['title']
-            tenday[period + '_forecast'] = res['forecast']['txt_forecast']['forecastday'][n]['fcttext']
-        return tenday
+
+            tenday_period = res['forecast']['txt_forecast']['forecastday'][n]['title']
+            tenday_forecast = res['forecast']['txt_forecast']['forecastday'][n]['fcttext']
+            print("\n{}: {}\n".format(tenday_period, tenday_forecast))
 
 
 class Astronomy:
@@ -49,7 +48,7 @@ class Astronomy:
         sunrisem = res['moon_phase']['sunrise']['minute']
         sunseth = res['moon_phase']['sunset']['hour']
         sunsetm = res['moon_phase']['sunset']['minute']
-        return {'sunriseh': sunriseh, 'sunrisem': sunrisem, 'sunseth': sunseth, 'sunsetm': sunsetm}
+        return "\nSunrise: {}:{}. Sunset {}:{}\n".format(sunriseh, sunrisem, sunseth, sunsetm)
 
 
 class Alerts:
@@ -63,9 +62,11 @@ class Alerts:
 
         if not res['alerts']:
             alert = 'None'
+            print("Weather Alerts: {}".format(alert))
         else:
-            alert = res['alerts'][0]['message']
-        return{'alert': alert}
+            for alert in res['alerts']:
+                alert = res['alerts'][0]['message']
+                print("\nWeather Alerts: {}\n".format(alert))
 
 
 class Hurricane:
@@ -76,7 +77,8 @@ class Hurricane:
 
         if not res['currenthurricane']:
             hurricanes = 'None'
+            print(hurricanes)
         else:
             for hurricane in res['currenthurricane']:
                 hurricanes = hurricane['stormInfo']['stormName']
-        return hurricanes
+                print(hurricanes)
