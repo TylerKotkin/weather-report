@@ -28,12 +28,12 @@ class TenDay:
 
         res = requests.get(url).json()
 
-        ret = {}
+        tenday = {}
         for n in range(20):
             period = 'period' + str(n + 1)
-            ret[period] = res['forecast']['txt_forecast']['forecastday'][n]['title']
-            ret[period + '_forecast'] = res['forecast']['txt_forecast']['forecastday'][n]['fcttext']
-        return ret
+            tenday[period] = res['forecast']['txt_forecast']['forecastday'][n]['title']
+            tenday[period + '_forecast'] = res['forecast']['txt_forecast']['forecastday'][n]['fcttext']
+        return tenday
 
 
 class Astronomy:
@@ -50,3 +50,33 @@ class Astronomy:
         sunseth = res['moon_phase']['sunset']['hour']
         sunsetm = res['moon_phase']['sunset']['minute']
         return {'sunriseh': sunriseh, 'sunrisem': sunrisem, 'sunseth': sunseth, 'sunsetm': sunsetm}
+
+
+class Alerts:
+    def __init__(self, q_string):
+        self.q_string = q_string
+
+    def run(self):
+        url = 'http://api.wunderground.com/api/{}/alerts/q/{}.json'.format(my_secret_key, self.q_string)
+
+        res = requests.get(url).json()
+
+        if not res['alerts']:
+            alert = 'None'
+        else:
+            alert = res['alerts'][0]['message']
+        return{'alert': alert}
+
+
+class Hurricane:
+    def run():
+        url = 'http://api.wunderground.com/api/{}/currenthurricane/view.json'.format(my_secret_key)
+
+        res = requests.get(url).json()
+
+        if not res['currenthurricane']:
+            hurricanes = 'None'
+        else:
+            for hurricane in res['currenthurricane']:
+                hurricanes = hurricane['stormInfo']['stormName']
+        return hurricanes

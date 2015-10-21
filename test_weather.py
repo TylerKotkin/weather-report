@@ -1,6 +1,6 @@
 import os
 import requests_mock
-from weather_report_data import Current, TenDay, Astronomy
+from weather_report_data import Current, TenDay, Astronomy, Alerts, Hurricane
 
 my_secret_key = os.environ['WUNDER_KEY']
 
@@ -39,8 +39,8 @@ def test_ten(m):
 def test_astronomy(m):
     url = 'http://api.wunderground.com/api/{}/astronomy/q/28409.json'.format(my_secret_key)
 
-    with open('weather_data/sun.json') as data:
-        m.get(url, text=data.read())
+    with open('weather_data/sun.json') as sun:
+        m.get(url, text=sun.read())
 
     astronomy = Astronomy('28409')
     res = astronomy.run()
@@ -49,3 +49,16 @@ def test_astronomy(m):
     assert res['sunrisem'] == "20"
     assert res['sunseth'] == "18"
     assert res['sunsetm'] == "31"
+
+
+@requests_mock.Mocker()
+def test_alerts(m):
+    url = 'http://api.wunderground.com/api/{}/alerts/q/28409.json'.format(my_secret_key)
+
+    with open('weather_data/alerts.json') as alt:
+        m.get(url, text=alt.read())
+
+    alerts = Alerts('28409')
+    res = alerts.run()
+
+    assert res['alert'] == "\u000A...Heat advisory remains in effect until 7 am CDT Saturday...\u000A\u000A* temperature...heat indices of 100 to 105 are expected each \u000A afternoon...as Max temperatures climb into the mid to upper \u000A 90s...combined with dewpoints in the mid 60s to around 70. \u000A Heat indices will remain in the 75 to 80 degree range at \u000A night. \u000A\u000A* Impacts...the hot and humid weather will lead to an increased \u000A risk of heat related stress and illnesses. \u000A\u000APrecautionary/preparedness actions...\u000A\u000AA heat advisory means that a period of hot temperatures is\u000Aexpected. The combination of hot temperatures and high humidity\u000Awill combine to create a situation in which heat illnesses are\u000Apossible. Drink plenty of fluids...stay in an air-conditioned\u000Aroom...stay out of the sun...and check up on relatives...pets...\u000Aneighbors...and livestock.\u000A\u000ATake extra precautions if you work or spend time outside. Know\u000Athe signs and symptoms of heat exhaustion and heat stroke. Anyone\u000Aovercome by heat should be moved to a cool and shaded location.\u000AHeat stroke is an emergency...call 9 1 1.\u000A\u000A\u000A\u000AMjb\u000A\u000A\u000A"
