@@ -8,7 +8,7 @@ def zipcode():
 
 def weather_report(zipcode):
     while True:
-        x = input('''Enter 1 for current weather conditions.
+        x = input('''\nEnter 1 for current weather conditions.
             Enter 2 for the ten-day forecast.
             Enter 3 for sunrise and sunset times.
             Enter 4 for weather alerts.

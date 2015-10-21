@@ -27,12 +27,13 @@ class TenDay:
         url = 'http://api.wunderground.com/api/{}/forecast10day/q/{}.json'.format(my_secret_key, self.q_string)
 
         res = requests.get(url).json()
-
+        ten = ''
         for n in range(20):
 
             tenday_period = res['forecast']['txt_forecast']['forecastday'][n]['title']
             tenday_forecast = res['forecast']['txt_forecast']['forecastday'][n]['fcttext']
-            print("\n{}: {}\n".format(tenday_period, tenday_forecast))
+            ten += "\n{}: {}\n".format(tenday_period, tenday_forecast)
+        return ten
 
 
 class Astronomy:
@@ -48,7 +49,8 @@ class Astronomy:
         sunrisem = res['moon_phase']['sunrise']['minute']
         sunseth = res['moon_phase']['sunset']['hour']
         sunsetm = res['moon_phase']['sunset']['minute']
-        return "\nSunrise: {}:{}. Sunset {}:{}\n".format(sunriseh, sunrisem, sunseth, sunsetm)
+        sunseth12 = (int(sunseth)-12)
+        return "\nSunrise: {}:{} am. Sunset {}:{} pm.\n".format(sunriseh, sunrisem, sunseth12, sunsetm)
 
 
 class Alerts:
@@ -59,14 +61,13 @@ class Alerts:
         url = 'http://api.wunderground.com/api/{}/alerts/q/{}.json'.format(my_secret_key, self.q_string)
 
         res = requests.get(url).json()
-
         if not res['alerts']:
-            alert = 'None'
-            print("Weather Alerts: {}".format(alert))
+            return 'No alerts.'
         else:
             for alert in res['alerts']:
                 alert = res['alerts'][0]['message']
-                print("\nWeather Alerts: {}\n".format(alert))
+                return '{}'.format(alert)
+
 
 
 class Hurricane:
@@ -74,11 +75,11 @@ class Hurricane:
         url = 'http://api.wunderground.com/api/{}/currenthurricane/view.json'.format(my_secret_key)
 
         res = requests.get(url).json()
-
+        hurricanes = ''
         if not res['currenthurricane']:
             hurricanes = 'None'
-            print(hurricanes)
+
         else:
             for hurricane in res['currenthurricane']:
-                hurricanes = hurricane['stormInfo']['stormName']
-                print(hurricanes)
+                hurricanes += hurricane['stormInfo']['stormName']+'\n'
+        return hurricanes
